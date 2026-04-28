@@ -115,3 +115,45 @@ def get_topic(level):
     text = file.read()
     file.close()
     return text
+
+# Команда /teema и ответ
+# Käsk /teema ja vastus
+@dp.message(Command("teema"))
+async def topic_command(message: types.Message):
+
+    # kasutajatunnuse hankimine
+    # Получение user id
+    user_id = message.from_user.id
+
+
+    # Получение информации уровня user id  из базы данных
+    # Kasutaja ID taseme teabe hankimine andmebaasist
+    level = get_user_level(user_id)
+
+
+    # Если пользователь прошел все темы получает поздравление
+    # Kui kasutaja on kõik teemad läbinud, saab ta õnnitluse.
+    if level > MAX_LEVEL:
+        await message.answer(
+            "Palju õnne! Sa oled läbinud kõik 20 teemat!"
+        )
+        return
+
+    # Отправка текста пользователю
+    # Tekstisõnumi saatmine kasutajale
+    topic_text = get_topic(level)
+    header = f"Tase {level}/{MAX_LEVEL}\n\n"
+    await message.answer(header + topic_text)
+
+    update_user_level(user_id, level + 1)
+
+# Запуск бота
+# Boti käivitamine
+
+async def main():
+    create_database()
+    print("PyLearn bot on käivitatud!")
+    await dp.start_polling(bot)
+
+if __name__ == "__main__":
+    asyncio.run(main())
