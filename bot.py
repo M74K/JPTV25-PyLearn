@@ -13,7 +13,8 @@ dp = Dispatcher()
 MAX_LEVEL = 20
 
 
-#andmebaas
+#Andmebaas
+#База данных
 def create_database():
     #подключение  к базе данных
     #andmebaasiga ühenduse loomine
