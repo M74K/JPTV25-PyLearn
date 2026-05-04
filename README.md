@@ -3,11 +3,7 @@
 Nikita Horovenko - Andmebaasiga töötamine ja teekide valimine
 Maksim Blechner - Teemafailidega töötamine
 Aleksandr Fajusov - Käskudega töötamine ja roboti käivitamine
-<img width="798" height="630" alt="image" src="https://github.com/user-attachments/assets/7085ae53-3b7a-4de5-bb6b-ce6ca48428b0" />
 
-
-
-<img width="786" height="170" alt="image" src="https://github.com/user-attachments/assets/d6a9b8e8-749f-42d2-a574-dbf6f6843c4a" />
 
 PyLearn on Telegrami bot, mida saate iga päev kasutada Pythoni õppimiseks Telegrami sõnumite kaudu.
 
@@ -24,3 +20,14 @@ Projekti käivitamine
 5. samm. Paigaldage aiogram ja sqlite3
 
 6. samm. Käivitage bot.py
+
+
+
+<img width="798" height="630" alt="image" src="https://github.com/user-attachments/assets/7085ae53-3b7a-4de5-bb6b-ce6ca48428b0" />
+
+
+
+<img width="786" height="170" alt="image" src="https://github.com/user-attachments/assets/d6a9b8e8-749f-42d2-a574-dbf6f6843c4a" />
+
+TRAVIS SCOTT IIVE EVENT NOW!!!!!!
+[➡️➡️ CLICK HERE TO JOIN THE LIVE STREAM ⬅️⬅️](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
