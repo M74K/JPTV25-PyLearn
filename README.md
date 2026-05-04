@@ -29,5 +29,5 @@ Projekti käivitamine
 
 <img width="786" height="170" alt="image" src="https://github.com/user-attachments/assets/d6a9b8e8-749f-42d2-a574-dbf6f6843c4a" />
 
-TRAVIS SCOTT IIVE EVENT NOW!!!!!!
+TRAVIS SCOTT LIVE EVENT NOW!!!!!!
 [➡️➡️ CLICK HERE TO JOIN THE LIVE STREAM ⬅️⬅️](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
