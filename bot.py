@@ -1,15 +1,29 @@
 import users
 import asyncio
 import sqlite3
+import json
+import os
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
-TOKEN = "Token_from_BotFather"
+TOKEN = ""
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
 MAX_LEVEL = 20
+
+
+#Загрузка тестов из файла
+#Testide laadimine failist
+def load_tests():
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(base_dir, "tests.json")
+    with open(file_path, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+tests = load_tests()
 
 
 #Andmebaas
@@ -117,12 +131,46 @@ def get_topic(level):
     return text
 
 
+#Создание клавиатуры для теста
+#Testi klaviatuuri loomine
+def create_test_keyboard(level):
+    test = tests[str(level)]
+    buttons = []
+    
+    for i, option in enumerate(test["options"]):
+        button = InlineKeyboardButton(
+            text=option,
+            callback_data=f"answer_{level}_{i}"
+        )
+        buttons.append([button])
+    
+    return InlineKeyboardMarkup(inline_keyboard=buttons)
+
+
 # Команда /start которая отправляет в ответ приветственное сообщение
 # Käsk /start saadab vastuseks tervitussõnumi.
 @dp.message(Command("start"))
 async def start_command(message: types.Message):
     await message.answer("🦛Tere, see on PyLearni bot.\n"
                          "See bot on loodud Pythoni õppimiseks.🐸")
+
+
+# Команда /mina - показать статистику пользователя
+# Käsk /mina - kuva kasutaja statistikat
+@dp.message(Command("mina"))
+async def mina_command(message: types.Message):
+    user_id = message.from_user.id
+    username = message.from_user.username or "Teadmata"
+    level = get_user_level(user_id)
+    
+    stats = f"""👤 <b>Sinu statistika</b>
+
+📛 Kasutajanimi: @{username}
+🆔 Telegrammi ID: {user_id}
+📊 Hetke tase: {level}/{MAX_LEVEL}"""
+    
+    await message.answer(stats, parse_mode="HTML")
+    
     
 
 # Команда /teema и ответ
@@ -134,11 +182,9 @@ async def topic_command(message: types.Message):
     # Получение user id
     user_id = message.from_user.id
 
-
     # Получение информации уровня user id  из базы данных
     # Kasutaja ID taseme teabe hankimine andmebaasist
     level = get_user_level(user_id)
-
 
     # Если пользователь прошел все темы получает поздравление
     # Kui kasutaja on kõik teemad läbinud, saab ta õnnitluse.
@@ -154,11 +200,60 @@ async def topic_command(message: types.Message):
     header = f"Tase {level}/{MAX_LEVEL}\n\n"
     await message.answer(header + topic_text)
 
-    update_user_level(user_id, level + 1)
+    # Отправка теста с кнопками
+    # Testi saatmine nupudega
+    test = tests[str(level)]
+    test_message = f"<b>Test</b>\n\n{test['question']}"
+    keyboard = create_test_keyboard(level)
+    
+    await message.answer(test_message, reply_markup=keyboard, parse_mode="HTML")
 
 
-# Запуск бота
-# Boti käivitamine
+# Обработка нажатия на кнопку теста
+# Testi nupu kliki käsitlemine
+@dp.callback_query()
+async def answer_callback(query: types.CallbackQuery):
+    data = query.data
+    
+    # Проверка если это ответ на тест
+    # Kontrolli kas see on testi vastus
+    if not data.startswith("answer_"):
+        return
+    
+    # Извлечение уровня и выбранного ответа
+    # Taseme ja valitud vastuse eraldamine
+    parts = data.split("_")
+    level = int(parts[1])
+    selected_answer = int(parts[2])
+    
+    test = tests[str(level)]
+    correct_answer = test["correct"]
+    
+    # Проверка правильности ответа
+    # Vastuse õigsuse kontrollimine
+    if selected_answer == correct_answer:
+
+        user_id = query.from_user.id
+        update_user_level(user_id, level + 1)
+        
+        await query.answer("✅ Õige vastus!", show_alert=True)
+        await query.message.edit_text(
+            f"<b>✅ Õige!</b>\n\nPalju õnne! Liigud järgmisele tasemele.",
+            parse_mode="HTML"
+        )
+    else:
+        # Неправильный ответ
+        # Vale vastus
+        correct_option = test["options"][correct_answer]
+        
+        await query.answer("❌ Vale vastus!", show_alert=True)
+        await query.message.edit_text(
+            f"<b>❌ Vale!</b>\n\n"
+            f"Õige vastus oli: <b>{correct_option}</b>\n\n"
+            f"Proovi uuesti käskga /teema",
+            parse_mode="HTML"
+        )
+    
 
 async def main():
     create_database()
