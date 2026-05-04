@@ -1,11 +1,10 @@
-#импортирование нужных библиотек и настройка бота
-#vajalike teekide importimine ja roboti seadistamine
-import sqlite3
+import users
 import asyncio
+import sqlite3
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
 
-TOKEN = "Bot_token_from_botfather"
+TOKEN = "Token_from_BotFather"
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
@@ -117,6 +116,15 @@ def get_topic(level):
     file.close()
     return text
 
+
+# Команда /start которая отправляет в ответ приветственное сообщение
+# Käsk /start saadab vastuseks tervitussõnumi.
+@dp.message(Command("start"))
+async def start_command(message: types.Message):
+    await message.answer("🦛Tere, see on PyLearni bot.\n"
+                         "See bot on loodud Pythoni õppimiseks.🐸")
+    
+
 # Команда /teema и ответ
 # Käsk /teema ja vastus
 @dp.message(Command("teema"))
@@ -147,6 +155,7 @@ async def topic_command(message: types.Message):
     await message.answer(header + topic_text)
 
     update_user_level(user_id, level + 1)
+
 
 # Запуск бота
 # Boti käivitamine
