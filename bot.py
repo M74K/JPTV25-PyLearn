@@ -127,18 +127,32 @@ async def start_command(message: types.Message):
                          "See bot on loodud Pythoni õppimiseks.🐸")
     
 
+# Команда /help и ответ
+# Käsk /help ja vastus
+@dp.message(Command("help"))
+async def help_command(message: types.Message):
+    help_text = "PyLearn on bot Pythoni õppimiseks Telegrami sõnumite kaudu.\n\n"
+    help_text += "Käsud:\n"  
+    help_text += "/start - Alusta boti kasutamist\n" 
+    help_text += "/help - Abiinfo\n" 
+    help_text += "/teema - Loe uut teemat ja tee test\n" 
+    help_text += "/mina - Sinu statistika\n"
+    help_text += "/dev - Arendaja menüü"
+
+
+    # Pildi saatmine koos tekstiga
+    # Отправка картинки с текстом
+    photo = FSInputFile("JPTV25-PyLearn-main/assets/Mis.png")
+    await bot.send_photo(chat_id=message.chat.id, photo=photo, caption=help_text)
+
+
+
 # Команда /teema и ответ
 # Käsk /teema ja vastus
 @dp.message(Command("teema"))
 async def topic_command(message: types.Message):
 
-    # kasutajatunnuse hankimine
-    # Получение user id
     user_id = message.from_user.id
-
-
-    # Получение информации уровня user id  из базы данных
-    # Kasutaja ID taseme teabe hankimine andmebaasist
     level = get_user_level(user_id)
 
 
