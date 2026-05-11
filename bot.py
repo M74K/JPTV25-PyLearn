@@ -277,13 +277,93 @@ async def mina_command(message: types.Message):
     await bot.send_photo(chat_id=message.chat.id, photo=photo, caption=text)
 
 
+
+
+
+
+
+
+
+
+
+# Dev меню
+# Arendaja menüü
+@dp.message(Command("dev"))
+async def dev_command(message: types.Message):
+
+    keyboard = InlineKeyboardMarkup(inline_keyboard = [
+
+        [InlineKeyboardButton(text = "Kasutajate statistika", callback_data = "dev_stats")],
+
+        [InlineKeyboardButton(text = "Puhasta andmebaas", callback_data = "dev_clear")]
+
+    ])
+
+    # Pildi saatmine koos tekstiga
+    # Отправка картинки с текстом
+    photo = FSInputFile("JPTV25-PyLearn-main/assets/Dev.png")
+    await bot.send_photo(chat_id=message.chat.id, photo=photo, caption="🛠 Dev menüü:", reply_markup = keyboard)
+
+
+@dp.callback_query(lambda c: c.data and c.data.startswith("dev_"))
+async def dev_callback(callback: types.CallbackQuery):
+
+    action = callback.data.split("_")[1]
+
+    if action == "stats":
+        connection = sqlite3.connect("JPTV25-PyLearn-main/pylearn.db")
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM users")
+        users = cursor.fetchall()
+
+        connection.close()
+
+        
+        text = "Kasutajate andmebaas:\n\n"
+
+        for u in users:
+            errs = u[2] if len(u) > 2 else 0 
+            text += f"ID: {u[0]} | Tase: {u[1]} | Vigu: {errs}\n"
+
+        
+        text += f"\nKokku kasutajaid: {len(users)}"
+        await callback.message.answer(text[:4000]) 
+        await callback.answer()
+
+        
+    elif action == "clear":
+        connection = sqlite3.connect("JPTV25-PyLearn-main/pylearn.db")
+        cursor = connection.cursor()
+        cursor.execute("DELETE FROM users")
+        connection.commit()
+        connection.close()
+        await callback.message.answer("Andmebaas on puhastatud!")
+        await callback.answer()
+
+
+# Секретная команда
+# Saladuslik käsk
+@dp.message(Command("JPTVSecret"))
+async def secret_command(message: types.Message):
+    secret_text = "PyLearni arendajad on:\n\n"
+    secret_text += "1. Nikita Horovenko\n"
+    secret_text += "2. Maksim Blechner\n"
+    secret_text += "3. Aleksandr Fajusov"
+    
+    await message.answer(secret_text)
+
+
 # Запуск бота
 # Boti käivitamine
-
 async def main():
+
     create_database()
+
     print("PyLearn bot on käivitatud!")
+
     await dp.start_polling(bot)
 
+
 if __name__ == "__main__":
+
     asyncio.run(main())
