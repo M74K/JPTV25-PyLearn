@@ -194,6 +194,87 @@ async def topic_command(message: types.Message):
         update_user_level(user_id, level + 1)
         await message.answer("Sellel tasemel pole testi. Järgmine tase on avatud! Kirjuta /teema")
 
+# Обработчик ответов на тесты
+# Testide vastuste haldaja
+@dp.callback_query(lambda c: c.data and c.data.startswith("ans_"))
+async def test_callback(callback: types.CallbackQuery):
+    user_id = callback.from_user.id
+    data_parts = callback.data.split("_")
+    level = int( data_parts[1] )
+    btn_idx = int( data_parts[2] )
+
+
+    current_level = get_user_level(user_id)
+
+    if level != current_level:
+        await callback.answer("See test pole enam aktiivne!", show_alert = True)
+        return
+
+
+    try:
+
+        with open("JPTV25-PyLearn-main/tests.json", "r", encoding = "utf-8") as f:
+            tests = json.load(f)
+        test_data = tests.get(str(level))
+    except:
+        test_data = None
+
+
+    if not test_data:
+        await callback.answer("Viga! Testi ei leitud.", show_alert = True)
+        return
+
+
+    correct_idx = test_data["correct"]
+
+
+    if btn_idx == correct_idx:
+        update_user_level(user_id, level + 1)
+        await callback.message.edit_text(f"Test:\n{test_data['question']}\n\nÕige vastus!")
+        await callback.answer("Õige!")
+        await callback.message.answer("Tubli! Kirjuta /teema, et saada uus teema.")
+
+    else:
+        add_user_error(user_id)
+        await callback.answer("Vale vastus, proovi uuesti!", show_alert = True)
+
+        
+        old_keyboard = callback.message.reply_markup.inline_keyboard
+        new_keyboard = []
+        for row in old_keyboard:
+            new_row = []
+            for btn in row:
+                if btn.callback_data == callback.data:
+                    new_text = btn.text if "❌" in btn.text else btn.text + " ❌"
+                    new_row.append(InlineKeyboardButton(text = new_text, callback_data = btn.callback_data))
+                else:
+                    new_row.append(InlineKeyboardButton(text = btn.text, callback_data = btn.callback_data))
+            new_keyboard.append(new_row)
+
+        
+        new_markup = InlineKeyboardMarkup(inline_keyboard = new_keyboard)
+        try:
+            await callback.message.edit_reply_markup(reply_markup = new_markup)
+        except:
+            pass 
+
+
+# Статистика пользователя
+# Kasutaja statistika
+@dp.message(Command("mina"))
+async def mina_command(message: types.Message):
+
+    user_id = message.from_user.id
+
+    level, errors = get_user_stats(user_id)
+
+    text = f"Sinu statistika:\nID: {user_id}\nTase: {level}/{MAX_LEVEL}\nVigu testides: {errors}"
+
+    # Pildi saatmine koos tekstiga
+    # Отправка картинки с текстом
+    photo = FSInputFile("JPTV25-PyLearn-main/assets/Mina.png")
+    await bot.send_photo(chat_id=message.chat.id, photo=photo, caption=text)
+
 
 # Запуск бота
 # Boti käivitamine
