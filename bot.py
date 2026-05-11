@@ -121,6 +121,8 @@ def get_topic(level):
 # Käsk /start saadab vastuseks tervitussõnumi.
 @dp.message(Command("start"))
 async def start_command(message: types.Message):
+    user_id = message.from_user.id
+    get_user_level(user_id) 
     await message.answer("🦛Tere, see on PyLearni bot.\n"
                          "See bot on loodud Pythoni õppimiseks.🐸")
     
