@@ -159,18 +159,40 @@ async def topic_command(message: types.Message):
     # Если пользователь прошел все темы получает поздравление
     # Kui kasutaja on kõik teemad läbinud, saab ta õnnitluse.
     if level > MAX_LEVEL:
-        await message.answer(
-            "Palju õnne! Sa oled läbinud kõik 20 teemat!"
-        )
+        await message.answer("Palju õnne! Sa oled läbinud kõik 20 teemat!")
         return
 
-    # Отправка текста пользователю
-    # Tekstisõnumi saatmine kasutajale
+
     topic_text = get_topic(level)
     header = f"Tase {level}/{MAX_LEVEL}\n\n"
-    await message.answer(header + topic_text)
 
-    update_user_level(user_id, level + 1)
+    # Pildi saatmine koos tekstiga
+    # Отправка картинки с текстом
+    photo = FSInputFile("JPTV25-PyLearn-main/assets/Teema.png")
+    await bot.send_photo(chat_id=message.chat.id, photo=photo, caption=header + topic_text)
+
+
+    try:
+        with open("JPTV25-PyLearn-main/tests.json", "r", encoding = "utf-8") as f:
+            tests = json.load(f)
+    except:
+        tests = {}
+
+
+    test_data = tests.get(str(level))
+    if test_data:
+        keyboard = []
+        for i, option in enumerate(test_data["options"]):
+            btn = InlineKeyboardButton(text = option, callback_data = f"ans_{level}_{i}")
+            keyboard.append([btn])
+
+        
+        reply_markup = InlineKeyboardMarkup(inline_keyboard = keyboard)
+        await message.answer(f"Test:\n{test_data['question']}", reply_markup = reply_markup)
+
+    else:
+        update_user_level(user_id, level + 1)
+        await message.answer("Sellel tasemel pole testi. Järgmine tase on avatud! Kirjuta /teema")
 
 
 # Запуск бота
