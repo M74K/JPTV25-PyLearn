@@ -5,10 +5,12 @@ from aiogram import Bot , Dispatcher , types
 from aiogram.filters import Command
 from aiogram.types import InlineKeyboardMarkup , InlineKeyboardButton, FSInputFile
 
-TOKEN = "Token_from_BotFather"
 
-bot = Bot(token=TOKEN)
+TOKEN = "8547558550:AAGkaZ5hbNgS0Y1UrHGiCt4xT9NLWZ4K8NY"
+
+bot = Bot(token = TOKEN)
 dp = Dispatcher()
+
 
 MAX_LEVEL = 20
 
@@ -16,20 +18,20 @@ MAX_LEVEL = 20
 #Andmebaas
 #База данных
 def create_database():
+
     #подключение  к базе данных
     #andmebaasiga ühenduse loomine
-    connection = sqlite3.connect("pylearn.db")
+    connection = sqlite3.connect("JPTV25-PyLearn-main/pylearn.db")
     cursor = connection.cursor()
  
-
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS users (
             user_id INTEGER PRIMARY KEY,
-            level INTEGER DEFAULT 1
+            level INTEGER DEFAULT 1,
+            errors INTEGER DEFAULT 0
         )
     """)
-    #сохранение изменений в базу данных
-    #andmebaasi muudatuste salvestamine
+
     connection.commit()
     connection.close()
 
@@ -37,32 +39,64 @@ def create_database():
 #работа с уровнями пользователей
 #kasutajatasemetega töötamine
 def get_user_level(user_id):
-    connection = sqlite3.connect("pylearn.db")
+    connection = sqlite3.connect("JPTV25-PyLearn-main/pylearn.db")
     cursor = connection.cursor()
     cursor.execute("SELECT level FROM users WHERE user_id = ?", (user_id,))
     result = cursor.fetchone()
 
+
     #добавление пользователя в базу данных если его нет
     #kasutaja lisamine andmebaasi, kui seda pole olemas
     if result is None:
-        cursor.execute("INSERT INTO users (user_id, level) VALUES (?, 1)", (user_id,))
+
+        cursor.execute("INSERT INTO users (user_id, level, errors) VALUES (?, 1, 0)", (user_id,))
+
         connection.commit()
         connection.close()
         return 1
 
+    
     #если пользователь есть в базе то ничего не делать
-    #kui kasutaja on andmebaasis olemas, siis ära tee midagi.
+    #kui kasutaja on andmebaasis olemas, siis ära tee midagi
     connection.close()
     return result[0]
+
 
 #повышение уровня пользователя 
 #kasutaja taseme tõus
 def update_user_level(user_id, new_level):
-    connection = sqlite3.connect("pylearn.db")
+
+    connection = sqlite3.connect("JPTV25-PyLearn-main/pylearn.db")
     cursor = connection.cursor()
     cursor.execute("UPDATE users SET level = ? WHERE user_id = ?", (new_level, user_id))
+
     connection.commit()
     connection.close()
+
+
+# добавление ошибки пользователю
+# vea lisamine kasutajale
+def add_user_error(user_id):
+    connection = sqlite3.connect("JPTV25-PyLearn-main/pylearn.db")
+    cursor = connection.cursor()
+    cursor.execute("UPDATE users SET errors = errors + 1 WHERE user_id = ?", (user_id,))
+
+    connection.commit()
+    connection.close()
+
+
+# получение статистики пользователя
+# kasutaja statistika hankimine
+def get_user_stats(user_id):
+    connection = sqlite3.connect("JPTV25-PyLearn-main/pylearn.db")
+    cursor = connection.cursor()
+    cursor.execute("SELECT level, errors FROM users WHERE user_id = ?", (user_id,))
+    result = cursor.fetchone()
+    connection.close()
+
+    if result:
+        return result
+    return (1, 0)
 
 
 #Чтение файлов с сообщениями бота
