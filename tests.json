@@ -1,0 +1,22 @@
+{
+  "1": {"question": "Mis funktsioon väljastab teksti konsooli?", "options": ["print()", "input()", "str()", "int()"], "correct": 0},
+  "2": {"question": "Kuidas luua muutuja?", "options": ["x == 5", "let x = 5", "x = 5", "var x = 5"], "correct": 2},
+  "3": {"question": "Mis on õige andmetüüp täisarvudele?", "options": ["float", "int", "str", "bool"], "correct": 1},
+  "4": {"question": "Kuidas kommenteerida ühte rida Pythonis?", "options": ["/* kommentaar */", "// kommentaar", "<!-- kommentaar -->", "# kommentaar"], "correct": 3},
+  "5": {"question": "Mis andmetüüp on 'True'?", "options": ["int", "bool", "str", "float"], "correct": 1},
+  "6": {"question": "Kuidas saada kasutajalt sisendit?", "options": ["get()", "read()", "input()", "scan()"], "correct": 2},
+  "7": {"question": "Mis operaator leiab jagatise jäägi?", "options": ["/", "//", "%", "**"], "correct": 2},
+  "8": {"question": "Kuidas luua funktsiooni?", "options": ["function f():", "def f():", "create f():", "fun f():"], "correct": 1},
+  "9": {"question": "Mis tsükkel kordab teatud arvu kordi?", "options": ["while", "for", "do-while", "loop"], "correct": 1},
+  "10": {"question": "Kuidas luua nimekirja (list)?", "options": ["[]", "{}", "()", "<>"], "correct": 0},
+  "11": {"question": "Kuidas lisada element nimekirja lõppu?", "options": ["add()", "insert()", "append()", "push()"], "correct": 2},
+  "12": {"question": "Mis on sõnastik (dictionary)?", "options": ["Järjend", "Hulk", "Võti-väärtus paarid", "Tekstifail"], "correct": 2},
+  "13": {"question": "Kuidas kontrollida tingimust?", "options": ["when", "if", "check", "case"], "correct": 1},
+  "14": {"question": "Mida teeb 'break' tsüklis?", "options": ["Lõhub koodi", "Katkestab tsükli", "Hüppab järgmise iteratsioonini", "Teeb pausi"], "correct": 1},
+  "15": {"question": "Mida teeb 'continue' tsüklis?", "options": ["Jätkab programmi", "Katkestab tsükli", "Läheb järgmisele iteratsioonile", "Sulgeb skripti"], "correct": 2},
+  "16": {"question": "Kuidas importida teeki?", "options": ["include math", "import math", "require math", "using math"], "correct": 1},
+  "17": {"question": "Mis on stringi pikkuse leidmise funktsioon?", "options": ["length()", "size()", "count()", "len()"], "correct": 3},
+  "18": {"question": "Kuidas muuta string väikesteks tähtedeks?", "options": [".lower()", ".small()", ".down()", ".minify()"], "correct": 0},
+  "19": {"question": "Mida tagastab type(5.5)?", "options": ["int", "float", "double", "decimal"], "correct": 1},
+  "20": {"question": "Kuidas lugeda faili Pythonis?", "options": ["read('fail')", "open('fail', 'r')", "file('fail')", "get('fail')"], "correct": 1}
+}
