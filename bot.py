@@ -6,7 +6,7 @@ from aiogram.filters import Command
 from aiogram.types import InlineKeyboardMarkup , InlineKeyboardButton, FSInputFile
 
 
-TOKEN = "8547558550:AAGkaZ5hbNgS0Y1UrHGiCt4xT9NLWZ4K8NY"
+TOKEN = ""
 
 bot = Bot(token = TOKEN)
 dp = Dispatcher()
