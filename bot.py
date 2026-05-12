@@ -382,7 +382,7 @@ async def secret_command(message: types.Message):
     secret_text = "PyLearni arendajad on:\n\n"
     secret_text += "1. Nikita Horovenko\n"
     secret_text += "2. Maksim Blechner\n"
-    secret_text += "3. Aleksandr Fajusov"
+    secret_text += "3. Aleksandr Fajustov"
     
     await message.answer(secret_text)
 
